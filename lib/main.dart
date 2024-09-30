@@ -1,8 +1,10 @@
+import 'dart:convert';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:currency/classes/exchange_rates.dart';
 import 'package:currency/env/env.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
@@ -36,6 +38,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late Future<ExchangeRates> futureExchangeRates;
+  Timer? _debouncer;
 
   @override
   void initState() {
@@ -46,6 +49,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     super.dispose();
+    _debouncer?.cancel();
+  }
+
+  _debounce() async {
+    if (_debouncer?.isActive ?? false) _debouncer?.cancel();
+    _debouncer = Timer(const Duration(milliseconds: 500), () {});
   }
 
   @override
