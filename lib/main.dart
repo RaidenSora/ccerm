@@ -5,15 +5,30 @@ import 'package:flutter/material.dart';
 import 'package:currency/classes/exchange_rates.dart';
 import 'package:currency/env/env.dart';
 import 'package:http/http.dart' as http;
+import 'package:workmanager/workmanager.dart';
+
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) {
+    print("Native called background task: $task");
+    return Future.value(true);
+  });
+}
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+
+  Workmanager().registerPeriodicTask(
+    "periodic-task-identifier",
+    "fetchExchangeRatePeriodicTask",
+    frequency: const Duration(minutes: 15),
+  );
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
