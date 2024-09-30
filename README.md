@@ -1,16 +1,3 @@
 # Currency Converter and Exchange Rate Monitor (CCERM)
 
-CCERM app converts currency and displays current exchange rate of different currencies around the world. Data and API used for this app can be found at API Ninja website. 
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+CCERM android app converts currency and displays the current exchange rate of different currencies worldwide. Data and API used for this app can be found at [API Ninja](https://nodejs.org/en/download/) and [Currency API](https://app.currencyapi.com/) website. 
