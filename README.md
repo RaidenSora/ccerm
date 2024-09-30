@@ -1,6 +1,6 @@
-# currency
+# Currency Converter and Exchange Rate Monitor (CCERM)
 
-A new Flutter project.
+CCERM app converts currency and displays current exchange rate of different currencies around the world. Data and API used for this app can be found at API Ninja website. 
 
 ## Getting Started
 
