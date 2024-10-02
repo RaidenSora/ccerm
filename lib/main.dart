@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:country_flags/country_flags.dart';
 import 'package:intl/intl.dart';
+import 'package:currency/currencies/currencies.dart';
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) {
@@ -62,13 +63,17 @@ class _MyHomePageState extends State<MyHomePage> {
   String? selectedValue2 = "USD";
   TextEditingController amountTextField1 = TextEditingController();
   TextEditingController amountTextField2 = TextEditingController();
-  final List<DropdownMenuItem<String>> items = [
-    DropdownMenuItem(
-      value: 'PHP',
+  final List<DropdownMenuItem<String>> items =
+      currencyCodes.asMap().entries.map((entry) {
+    int index = entry.key;
+    String currency = entry.value;
+
+    return DropdownMenuItem(
+      value: currency,
       child: Row(
         children: [
           CountryFlag.fromCountryCode(
-            'PH',
+            countryCodes[index],
             shape: const RoundedRectangle(3),
             height: 23,
             width: 35,
@@ -76,81 +81,26 @@ class _MyHomePageState extends State<MyHomePage> {
           Container(
             margin: const EdgeInsets.only(left: 10),
             child: Text(
-              "PHP",
+              currency,
               style: GoogleFonts.poppins(),
             ),
           ),
-          Container(
-            margin: const EdgeInsets.only(left: 5),
-            child: Text(
-              "- Philippine Peso",
-              style: GoogleFonts.poppins(
-                color: const Color(0xff636363),
+          Flexible(
+            child: Container(
+              margin: const EdgeInsets.only(left: 5),
+              child: Text(
+                "- ${currencyNames[index]}",
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.poppins(
+                  color: const Color(0xff636363),
+                ),
               ),
             ),
           ),
         ],
       ),
-    ),
-    DropdownMenuItem(
-      value: 'USD',
-      child: Row(
-        children: [
-          CountryFlag.fromCountryCode(
-            'US',
-            shape: const RoundedRectangle(3),
-            height: 23,
-            width: 35,
-          ),
-          Container(
-            margin: const EdgeInsets.only(left: 10),
-            child: Text(
-              "USD",
-              style: GoogleFonts.poppins(),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(left: 5),
-            child: Text(
-              "- US Dollar",
-              style: GoogleFonts.poppins(
-                color: const Color(0xff636363),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-    DropdownMenuItem(
-      value: 'CAD',
-      child: Row(
-        children: [
-          CountryFlag.fromCountryCode(
-            'CAD',
-            shape: const RoundedRectangle(3),
-            height: 23,
-            width: 35,
-          ),
-          Container(
-            margin: const EdgeInsets.only(left: 10),
-            child: Text(
-              "CAD",
-              style: GoogleFonts.poppins(),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(left: 5),
-            child: Text(
-              "- Canadian Dollar",
-              style: GoogleFonts.poppins(
-                color: const Color(0xff636363),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-  ];
+    );
+  }).toList();
 
   @override
   void initState() {
@@ -298,8 +248,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               setState(() {
                                 selectedValue1 = value;
                                 amountTextField1.text =
-                                    "${getCurrency(value!)} ";
-                                ;
+                                    "${getCurrency(value!)} 0.00";
                               });
                             },
                             value: selectedValue1,
@@ -359,7 +308,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               setState(() {
                                 selectedValue2 = value;
                                 amountTextField2.text =
-                                    "${getCurrency(value!)} ";
+                                    "${getCurrency(value!)} 0.00";
                               });
                             },
                             value: selectedValue2,
