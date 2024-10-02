@@ -130,6 +130,22 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void swapCurrencies() {
+    setState(() {
+      String? oldSelectedValue1, oldSelectedValue2;
+      String oldAmount1, oldAmount2;
+      oldSelectedValue1 = selectedValue1;
+      oldSelectedValue2 = selectedValue2;
+      oldAmount1 = amountTextField1.text;
+      oldAmount2 = amountTextField2.text;
+
+      selectedValue1 = oldSelectedValue2;
+      selectedValue2 = oldSelectedValue1;
+      amountTextField1.text = oldAmount2;
+      amountTextField2.text = oldAmount1;
+    });
+  }
+
   _debounce(
       String unCleanAmount, String have, String want, int fromTextField) async {
     if (_debouncer?.isActive ?? false) _debouncer?.cancel();
@@ -234,7 +250,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ]),
                     margin: const EdgeInsets.only(top: 70),
-                    padding: const EdgeInsets.all(25),
+                    padding: const EdgeInsets.fromLTRB(25, 25, 25, 10),
                     width: MediaQuery.of(context).size.width,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -360,6 +376,33 @@ class _MyHomePageState extends State<MyHomePage> {
                               border: InputBorder.none,
                             ),
                             // style: GoogleFonts.poppins(),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 10),
+                          width: MediaQuery.of(context).size.width,
+                          alignment: Alignment.centerRight,
+                          child: IconButton(
+                            onPressed: swapCurrencies,
+                            icon: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.swap_horiz_outlined,
+                                  color: Color(0xff0900FF),
+                                ),
+                                Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: Text(
+                                    "SWAP",
+                                    style: GoogleFonts.poppins(
+                                      color: const Color(0xff0900FF),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
