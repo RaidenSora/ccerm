@@ -14,6 +14,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:country_flags/country_flags.dart';
 import 'package:intl/intl.dart';
 import 'package:currency/currencies/currencies.dart';
+import 'package:string_validator/string_validator.dart';
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) {
@@ -62,8 +63,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late Future<ExchangeRates> futureExchangeRates;
   Timer? _debouncer;
-  String? selectedValue1 = "SAR";
-  String? selectedValue2 = "USD";
+  String? selectedValue1 = "USD";
+  String? selectedValue2 = "PHP";
   TextEditingController amountTextField1 = TextEditingController();
   TextEditingController amountTextField2 = TextEditingController();
   final List<DropdownMenuItem<String>> items =
@@ -119,16 +120,25 @@ class _MyHomePageState extends State<MyHomePage> {
     _debouncer?.cancel();
   }
 
-  _debounce(String unFormattedAmount, String have, String want,
-      int fromTextField) async {
+  void addCurrencyCode(
+      String value, TextEditingController input, String selectedValue) {
+    setState(() {
+      if (isNumeric(value) || isFloat(value)) {
+        input.clear();
+        input.text = "${getCurrency(selectedValue!)} $value";
+      }
+    });
+  }
+
+  _debounce(
+      String unCleanAmount, String have, String want, int fromTextField) async {
     if (_debouncer?.isActive ?? false) _debouncer?.cancel();
     _debouncer = Timer(const Duration(milliseconds: 500), () {
-      unFormattedAmount = unFormattedAmount.trim();
-      if (unFormattedAmount.length >= 2) {
-        String formattedAmount = unFormattedAmount.substring(1);
+      String cleanedAmount = removeLettersAndExtraDots(unCleanAmount);
 
+      if (cleanedAmount.isNotEmpty) {
         futureExchangeRates.then((onValue) {
-          double? amount = double.parse(formattedAmount);
+          double? amount = double.parse(cleanedAmount);
           double? haveRate = onValue.data[have]?.value;
           double? wantRate = onValue.data[want]?.value;
           double haveAmount, wantAmount;
@@ -144,6 +154,15 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       }
     });
+  }
+
+  String removeLettersAndExtraDots(String input) {
+    String cleaned = input.replaceAll(RegExp(r'[^0-9.]'), '');
+    List<String> parts = cleaned.split('.');
+    if (parts.length <= 1) {
+      return cleaned;
+    }
+    return '${parts[0]}.${parts.sublist(1).join('')}';
   }
 
   @override
@@ -274,14 +293,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: TextField(
                             enableInteractiveSelection: false,
                             onChanged: (value) {
-                              setState(() {
-                                if (value.isNotEmpty &&
-                                    value[0] != getCurrency(selectedValue1!)) {
-                                  amountTextField1.clear();
-                                  amountTextField1.text =
-                                      "${getCurrency(selectedValue1!)} $value";
-                                }
-                              });
+                              addCurrencyCode(
+                                  value, amountTextField1, selectedValue1!);
 
                               _debounce(
                                   value, selectedValue1!, selectedValue2!, 1);
@@ -335,14 +348,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: TextField(
                             enableInteractiveSelection: false,
                             onChanged: (value) {
-                              setState(() {
-                                if (value.isNotEmpty &&
-                                    value[0] != getCurrency(selectedValue2!)) {
-                                  amountTextField2.clear();
-                                  amountTextField2.text =
-                                      "${getCurrency(selectedValue2!)} $value";
-                                }
-                              });
+                              addCurrencyCode(
+                                  value, amountTextField2, selectedValue2!);
 
                               _debounce(
                                   value, selectedValue2!, selectedValue1!, 2);
