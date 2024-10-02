@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:async';
 
+//import for test data
+import 'package:flutter/services.dart' show rootBundle;
+
 import 'package:currency/classes/exchange_rates.dart';
 import 'package:currency/env/env.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +62,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late Future<ExchangeRates> futureExchangeRates;
   Timer? _debouncer;
-  String? selectedValue1 = "PHP";
+  String? selectedValue1 = "SAR";
   String? selectedValue2 = "USD";
   TextEditingController amountTextField1 = TextEditingController();
   TextEditingController amountTextField2 = TextEditingController();
@@ -241,6 +244,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           width: MediaQuery.of(context).size.width,
                           child: DropdownButton(
+                            menuMaxHeight: 300,
                             underline: Container(),
                             iconSize: 24,
                             isExpanded: true,
@@ -301,6 +305,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           width: MediaQuery.of(context).size.width,
                           child: DropdownButton(
+                            menuMaxHeight: 300,
                             underline: Container(),
                             iconSize: 24,
                             isExpanded: true,
@@ -363,15 +368,20 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<ExchangeRates> fetchExchangeRates() async {
-    final response = await http.get(Uri.parse(
-        'https://api.currencyapi.com/v3/latest?apikey=${Env.apiKey}'));
+    //loading test data
+    String jsonString = await rootBundle.loadString('assets/test_data.json');
+    return ExchangeRates.fromJson(
+        jsonDecode(jsonString) as Map<String, dynamic>);
 
-    if (response.statusCode == 200) {
-      return ExchangeRates.fromJson(
-          jsonDecode(response.body) as Map<String, dynamic>);
-    } else {
-      throw Exception('Failed to load convertions');
-    }
+    // final response = await http.get(Uri.parse(
+    //     'https://api.currencyapi.com/v3/latest?apikey=${Env.apiKey}'));
+
+    // if (response.statusCode == 200) {
+    //   return ExchangeRates.fromJson(
+    //   jsonDecode(response.body) as Map<String, dynamic>);
+    // } else {
+    //   throw Exception('Failed to load convertions');
+    // }
   }
 }
 
