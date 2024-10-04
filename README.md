@@ -7,7 +7,8 @@
 
 <div align="center">
 
-<a href="https://github.com/RaidenSora"><img src="https://img.shields.io/badge/mentained%20by-raidensora-blue.svg" alt="RaidenSora" /></a>
+<a href="https://github.com/RaidenSora"><img src="https://img.shields.io/badge/progress-40%25-green.svg" alt="RaidenSora" /></a>
+<a href="https://github.com/RaidenSora/currency/commits/main/"><img src="https://badgen.net/github/commits/RaidenSora/currency/main" alt="Commits"></a>
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
 </div>
 
