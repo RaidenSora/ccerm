@@ -1,3 +1,4 @@
+// Currency code list
 const List<String> currencyCodes = [
   "AED",
   "AFN",
@@ -179,6 +180,7 @@ const List<String> currencyCodes = [
   "LTC",
   "ADA",
 ];
+// Country code list, ito yung corresponding country codes para sa list of currency codes natin
 const List<String> countryCodes = [
   "AE",
   "AF",
@@ -361,7 +363,7 @@ const List<String> countryCodes = [
   "US",
   "US"
 ];
-
+// Corresponding currency names para sa currency list
 const List<String> currencyNames = [
   "United Arab Emirates Dirham",
   "Afghan Afghani",

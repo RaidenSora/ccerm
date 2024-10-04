@@ -4,6 +4,7 @@ import 'dart:async';
 //import for test data
 import 'package:flutter/services.dart' show rootBundle;
 
+//import dependencies at classes na kelangan ng app, like yung workmanager para sa background process etc.
 import 'package:currency/classes/exchange_rates.dart';
 import 'package:currency/env/env.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'package:intl/intl.dart';
 import 'package:currency/currencies/currencies.dart';
 import 'package:string_validator/string_validator.dart';
 
+//function code ng background task
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) {
     print("Native called background task: $task");
@@ -27,6 +29,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
 
+  //nag define tayo ng background process with duration of 15 minutes (background code will execute every 15 minutes)
   Workmanager().registerPeriodicTask(
     "periodic-task-identifier",
     "fetchExchangeRatePeriodicTask",
@@ -61,17 +64,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  //defining variables and initial values na ididisplay ng application
   late Future<ExchangeRates> futureExchangeRates;
   Timer? _debouncer;
   String? selectedValue1 = "USD";
   String? selectedValue2 = "PHP";
   TextEditingController amountTextField1 = TextEditingController();
   TextEditingController amountTextField2 = TextEditingController();
+  //code kung san nilalagay isa isa yung value mula sa currencies.dart na file
   final List<DropdownMenuItem<String>> items =
       currencyCodes.asMap().entries.map((entry) {
     int index = entry.key;
     String currency = entry.value;
 
+    //eto yung structure ang laman ng drop down menu ng mga currencies
     return DropdownMenuItem(
       value: currency,
       child: Row(
@@ -109,6 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    //nilalagay natin yung initial value sa textfield1 and texfeild2
     amountTextField1.text = "${getCurrency(selectedValue1!)} 0.00";
     amountTextField2.text = "${getCurrency(selectedValue2!)} 0.00";
     futureExchangeRates = fetchExchangeRates();
@@ -120,6 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _debouncer?.cancel();
   }
 
+  //function para malagay natin yung currency code sa unahan ng textfield
   void addCurrencyCode(
       String value, TextEditingController input, String selectedValue) {
     setState(() {
@@ -130,6 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  //function para ma swap yung currency sa currency converter
   void swapCurrencies() {
     setState(() {
       String? oldSelectedValue1, oldSelectedValue2;
@@ -146,6 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  //this will be executed pagkatapos mag type ng user ng value sa currency converter
   _debounce(
       String unCleanAmount, String have, String want, int fromTextField) async {
     if (_debouncer?.isActive ?? false) _debouncer?.cancel();
@@ -154,11 +164,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
       if (cleanedAmount.isNotEmpty) {
         futureExchangeRates.then((onValue) {
+          //value from user
           double? amount = double.parse(cleanedAmount);
+          //exchange rate value ng currency na meron ka
           double? haveRate = onValue.data[have]?.value;
+          //exchange rate value ng currency na gusto mong i-convert
           double? wantRate = onValue.data[want]?.value;
           double haveAmount, wantAmount;
+          //computation ng value from user divided by exchange rate ng currency na meron ka
           haveAmount = amount / haveRate!;
+          //computation ng value ng currency na gusto mong i-convert
           wantAmount = haveAmount * wantRate!;
           if (fromTextField == 1) {
             amountTextField2.text =
@@ -172,6 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  //fini-filter out nito yung mga dots tsaka yung character para maging valid na double or integer yung value
   String removeLettersAndExtraDots(String input) {
     String cleaned = input.replaceAll(RegExp(r'[^0-9.]'), '');
     List<String> parts = cleaned.split('.');
@@ -181,6 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return '${parts[0]}.${parts.sublist(1).join('')}';
   }
 
+  //ito yung UI Design structure ng application
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -417,6 +434,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  //function para ma-fetch yung data mula sa API
   Future<ExchangeRates> fetchExchangeRates() async {
     //loading test data
     String jsonString = await rootBundle.loadString('assets/test_data.json');
@@ -428,13 +446,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // if (response.statusCode == 200) {
     //   return ExchangeRates.fromJson(
-    //   jsonDecode(response.body) as Map<String, dynamic>);
+    //       jsonDecode(response.body) as Map<String, dynamic>);
     // } else {
     //   throw Exception('Failed to load convertions');
     // }
   }
 }
 
+//function para ma-update yung value sa homepage widget
 void updateAndroidWidget(String count) {
   HomeWidget.saveWidgetData("text", count);
   HomeWidget.updateWidget(
@@ -442,6 +461,7 @@ void updateAndroidWidget(String count) {
   );
 }
 
+//function para makuha yung currency symbol ng currency code
 String getCurrency(String currencyCode) {
   var format = NumberFormat.simpleCurrency(name: currencyCode);
   return format.currencySymbol;
