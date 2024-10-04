@@ -41,7 +41,7 @@ API-KEY=CURRENCYAPI_API_KEY
 Then run the generator:
 
 ```sh
-dart run build_runner build
+$ dart run build_runner build
 ```
 
 Now you can run this flutter project 🚀
