@@ -1,5 +1,5 @@
 <div align="center">
-    <a href="https://github.com/RaidenSora/currency/">
+    <a href="https://github.com/RaidenSora/ccerm/">
         <img src="https://github.com/user-attachments/assets/33b7307e-e1b6-44d9-92f1-2c6067cf1015" height="100">
     </a>
     <h1>CCERM</h1>
@@ -8,7 +8,7 @@
 <div align="center">
 
 <a href="https://github.com/RaidenSora"><img src="https://img.shields.io/badge/progress-40%25-green.svg" alt="RaidenSora" /></a>
-<a href="https://github.com/RaidenSora/currency/commits/main/"><img src="https://badgen.net/github/commits/RaidenSora/currency/main" alt="Commits"></a>
+<a href="https://github.com/RaidenSora/ccerm/commits/main/"><img src="https://badgen.net/github/commits/RaidenSora/ccerm/main" alt="Commits"></a>
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
 </div>
 
@@ -27,7 +27,7 @@ CCERM android app converts currency and displays the current exchange rate of di
 Run the following commands from your terminal:
 
 ```sh
-$ git clone https://github.com/RaidenSora/currency
+$ git clone https://github.com/RaidenSora/ccerm
 $ flutter pub get
 ```
 Create a free account on [Currency API](https://currencyapi.com/) and get your api key in dashboard.
