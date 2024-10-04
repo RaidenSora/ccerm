@@ -1,3 +1,4 @@
+//Exchange rates class para magkaron ng structure yung data galing sa API
 class ExchangeRates {
   final Meta meta;
   final Map<String, Currency> data;
@@ -14,6 +15,7 @@ class ExchangeRates {
   }
 }
 
+//Meta class para sa meta data galing sa api
 class Meta {
   final String lastUpdatedAt;
 
@@ -26,6 +28,7 @@ class Meta {
   }
 }
 
+//Currency class para sa currency data like value and code galing sa api
 class Currency {
   final String code;
   final double value;
