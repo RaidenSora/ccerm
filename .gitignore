@@ -1,6 +1,6 @@
 # Miscellaneous
 *.env
-env.g.dart
+*.g.dart
 *.class
 *.log
 *.pyc
