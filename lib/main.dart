@@ -73,7 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String? exchangeRateAddInitialValue = "AED";
   TextEditingController amountTextField1 = TextEditingController();
   TextEditingController amountTextField2 = TextEditingController();
-  List<String> exchangeRatesRecords = ["USD", "CAD", "PHP"];
+  List<String> exchangeRatesRecords = ["KWD", "CAD", "PHP"];
+  List<String?> exchangeRatesValues = [];
 
   //code kung san nilalagay isa isa yung value mula sa currencies.dart na file
   final List<DropdownMenuItem<String>> items =
@@ -123,6 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
     amountTextField1.text = "${getCurrency(selectedValue1!)} 0.00";
     amountTextField2.text = "${getCurrency(selectedValue2!)} 0.00";
     futureExchangeRates = fetchExchangeRates();
+    initializeExchangeRates();
   }
 
   @override
@@ -199,6 +201,22 @@ class _MyHomePageState extends State<MyHomePage> {
       return cleaned;
     }
     return '${parts[0]}.${parts.sublist(1).join('')}';
+  }
+
+  void initializeExchangeRates() async {
+    await futureExchangeRates.then((onValue) {
+      exchangeRatesValues.clear();
+      for (var value in exchangeRatesRecords) {
+        double? baseValue = onValue.data[exchangeRatesBase]?.value;
+        double? targetValue = onValue.data[value]?.value;
+        double haveAmount = 1 / baseValue!;
+        double? exchangeRateFinalValue = haveAmount * targetValue!;
+
+        setState(() {
+          exchangeRatesValues.add(exchangeRateFinalValue.toStringAsFixed(2));
+        });
+      }
+    });
   }
 
   //ito yung UI Design structure ng application
@@ -496,6 +514,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           setState(() {
                                             exchangeRatesBase = value;
                                           });
+                                          initializeExchangeRates();
                                           Navigator.pop(context);
                                         },
                                         value: exchangeRatesBase,
@@ -597,7 +616,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                 // ),
                                 const Spacer(),
                                 Text(
-                                  "${getCurrency(item)} 1",
+                                  exchangeRatesValues.isNotEmpty == true
+                                      ? "${getCurrency(item)} ${exchangeRatesValues[exchangeRatesRecords.indexOf(item)]}"
+                                      : "${getCurrency(item)} 0",
                                   style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 17,
@@ -661,6 +682,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             setState(() {
                                               exchangeRatesRecords.add(value!);
                                             });
+                                            initializeExchangeRates();
                                             Navigator.pop(context);
                                           },
                                           value: exchangeRateAddInitialValue,
