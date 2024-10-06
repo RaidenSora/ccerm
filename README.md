@@ -7,7 +7,7 @@
 
 <div align="center">
 
-<a href="https://github.com/RaidenSora"><img src="https://img.shields.io/badge/progress-40%25-green.svg" alt="RaidenSora" /></a>
+<a href="https://github.com/RaidenSora"><img src="https://img.shields.io/badge/progress-60%25-green.svg" alt="RaidenSora" /></a>
 <a href="https://github.com/RaidenSora/ccerm/commits/main/"><img src="https://img.shields.io/github/commit-activity/t/RaidenSora/ccerm" alt="Commits"></a>
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
 </div>
@@ -15,10 +15,11 @@
 <div align="center">
 
 Currency Converter and Exchange Rate Monitor.
-<br>
-CCERM android app converts currency and displays the current exchange rate of different currencies worldwide. Data and API used for this app can be found at [API Ninja](https://nodejs.org/en/download/) and [Currency API](https://app.currencyapi.com/) website. 
 </div>
 
+## About
+
+Welcome to CCERM( Currency Converter and Exchange Rates Monitor) application! We are dedicated to providing users with accurate, real-time currency conversion and exchange rate information. Our goal is to empower travelers, businesses, OFWs, and anyone dealing with international transactions by simplifying the process of currency exchange. With a user-friendly interface and reliable data sourced from trusted financial institutions, we aim to help you make informed decisions and stay updated in a fast-paced global economy. Thank you for choosing us as your go-to resource for currency exchange needs.
 
 
 ## Setup
