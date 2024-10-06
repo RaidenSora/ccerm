@@ -24,6 +24,7 @@ CCERM android app converts currency and displays the current exchange rate of di
 ## Setup
 
 > NOTE: Make sure you have Flutter SDK installed in your system before proceeding to setup, if not you can follow the installation docs [here](https://docs.flutter.dev/get-started/install).
+
 Run the following commands from your terminal:
 
 ```sh
