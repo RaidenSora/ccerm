@@ -17,12 +17,15 @@
 Currency Converter and Exchange Rate Monitor.
 </div>
 
-## About
+## ✍️ About
 
 Welcome to CCERM( Currency Converter and Exchange Rates Monitor) application! We are dedicated to providing users with accurate, real-time currency conversion and exchange rate information. Our goal is to empower travelers, businesses, OFWs, and anyone dealing with international transactions by simplifying the process of currency exchange. With a user-friendly interface and reliable data sourced from trusted financial institutions, we aim to help you make informed decisions and stay updated in a fast-paced global economy. Thank you for choosing us as your go-to resource for currency exchange needs.
 
+## 📦 Releases 
 
-## Setup
+Coming soon 👀
+
+## 📎 CIY (Compile-It-Yourself)
 
 > NOTE: Make sure you have Flutter SDK installed in your system before proceeding to setup, if not you can follow the installation docs [here](https://docs.flutter.dev/get-started/install).
 
