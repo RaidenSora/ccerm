@@ -1,24 +1,158 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.Android.AppWidget.Container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.Android.AppWidgetContainer"
-    android:background="@drawable/app_widget_inner_view_background">
-
-    <TextView
-        android:id="@+id/appwidget_text"
-        style="@style/Widget.Android.AppWidget.InnerView"
-        android:layout_width="wrap_content"
-        android:layout_height="125dp"
+    android:background="@drawable/app_widget_inner_view_background"
+  >
+    <LinearLayout
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_centerInParent="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:contentDescription="@string/appwidget_text"
-        android:text="@string/appwidget_text"
-        android:textSize="24sp"
-        android:textStyle="bold|italic" />
+        android:orientation="vertical"
+        android:background="@drawable/app_widget_inner_view_background"
+        android:padding="5sp"
+        >
+
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Exchange Rates"
+            android:textColor="#FFFFFF"
+            android:includeFontPadding="false"
+            android:textSize="16sp"
+            tools:text="Exchange Rates"
+            />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins"
+            android:text="You can change this in app settings"
+            android:textColor="#FFFFFF"
+            android:textSize="8sp"
+            tools:text="You can change this in app settings" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            android:background="#302C9F"
+            android:paddingTop="15sp"
+            android:paddingBottom="15sp">
+
+            <ImageView
+                android:id="@+id/baseCurrencyImageView"
+                android:layout_width="25sp"
+                android:layout_height="17sp"
+                android:layout_marginRight="5sp"
+                />
+
+            <TextView
+                android:id="@+id/baseCurrencyCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="USD"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                tools:text="USD"
+                android:includeFontPadding="false"
+                android:layout_marginRight="3sp"/>
+
+            <TextView
+                android:id="@+id/baseCurrencyName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:includeFontPadding="false"
+                android:text="- US Dollar"
+                android:textColor="#D1D1D1"
+                android:textSize="12sp"
+                tools:text="- US Dollar" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:background="@drawable/layout_bg"
+           >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal"
+               >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal"
+                    android:paddingTop="15sp"
+                    >
+
+                    <ImageView
+                        android:id="@+id/targetCurrencyImageView"
+                        android:layout_width="25sp"
+                        android:layout_height="17sp"
+                        android:layout_marginRight="5sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/targetCurrencyCode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
+                        android:text="PHP"
+                        android:textColor="#000000"
+                        android:textSize="12sp"
+                        tools:text="PHP"
+                        android:includeFontPadding="false"
+                        android:layout_marginRight="3sp"/>
+
+                    <TextView
+                        android:id="@+id/targetCurrencyName"
+                        android:layout_width="match_parent"
+                        android:layout_height="20sp"
+                        android:fontFamily="@font/poppins"
+                        android:includeFontPadding="false"
+                        android:text="- Philippine Peso"
+                        android:textColor="#626262"
+                        android:textSize="12sp"
+                        tools:text="-Philippine Peso"
+                        android:ellipsize="end"/>
+                </LinearLayout>
+
+            </LinearLayout>
+            <TextView
+                android:id="@+id/targetCurrencyValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:includeFontPadding="false"
+                android:text="PHP 56.0"
+                android:textColor="#000000"
+                android:textSize="22sp"
+                tools:text="PHP 56.0"
+                android:ellipsize="end"
+                android:padding="15sp"
+
+
+                />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
 </RelativeLayout>
