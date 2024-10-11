@@ -8,9 +8,13 @@ import es.antonborri.home_widget.HomeWidgetPlugin
 import android.widget.ImageView
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.IdRes
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.concurrent.Executors
 
 /**
@@ -25,41 +29,7 @@ class ExchangeRateWidget : AppWidgetProvider() {
 
         val remoteViews = RemoteViews(context.packageName, R.layout.exchange_rate_widget)
 
-        // Declaring executor to parse the URL
-        val executor = Executors.newSingleThreadExecutor()
 
-        // Once the executor parses the URL
-        // and receives the image, handler will load it
-        // in the ImageView
-        val handler = Handler(Looper.getMainLooper())
-
-        // Initializing the image
-        var image: Bitmap? = null
-
-        // Only for Background process (can take time depending on the Internet speed)
-        executor.execute {
-
-            // Image URL
-            val imageURL = "https://media.geeksforgeeks.org/wp-content/cdn-uploads/gfg_200x200-min.png"
-
-            // Tries to get the image and post it in the ImageView
-            // with the help of Handler
-            try {
-                val `in` = java.net.URL(imageURL).openStream()
-                image = BitmapFactory.decodeStream(`in`)
-
-                // Only for making changes in UI
-                handler.post {
-                    remoteViews.setImageViewBitmap(R.id.baseCurrencyImageView,image )
-                }
-            }
-
-            // If the URL doesnot point to
-            // image or any other kind of failure
-            catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
         // There may be multiple widgets active, so update all of them
         for (appWidgetId in appWidgetIds) {
             val widgetData = HomeWidgetPlugin.getData(context)
@@ -67,15 +37,110 @@ class ExchangeRateWidget : AppWidgetProvider() {
             val textval = widgetData.getString("text","Text")
             //views.setTextViewText(R.id.appwidget_text, textval)
             appWidgetManager.updateAppWidget(appWidgetId,views)
+//            ImageDownloaderBase(context, appWidgetManager,appWidgetId).execute("https://flagsapi.com/US/flat/64.png")
+//            ImageDownloaderTarget(context, appWidgetManager, appWidgetId).execute("https://flagsapi.com/PH/flat/64.png")
+            ImageDownloader(context, appWidgetManager, appWidgetId).execute("https://flagsapi.com/US/flat/64.png","https://flagsapi.com/PH/flat/64.png")
+
+
         }
     }
 
     override fun onEnabled(context: Context) {
-        // Enter relevant functionality for when the first widget is created
+
     }
 
     override fun onDisabled(context: Context) {
+
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+//    private class ImageDownloaderBase(
+//        private val context: Context,
+//        private val appWidgetManager: AppWidgetManager,
+//        private val appWidgetId: Int
+//    ) : AsyncTask<String, Void, Bitmap?>() {
+//
+//        override fun doInBackground(vararg urls: String?): Bitmap? {
+//            return try {
+//                val url = URL(urls[0])
+//                val connection = url.openConnection() as HttpURLConnection
+//                connection.doInput = true
+//                connection.connect()
+//                val input = connection.inputStream
+//                BitmapFactory.decodeStream(input)
+//            } catch (e: Exception) {
+//                null
+//            }
+//        }
+//
+//        override fun onPostExecute(result: Bitmap?) {
+//            if (result != null) {
+//                val views = RemoteViews(context.packageName, R.layout.exchange_rate_widget)
+//                views.setImageViewBitmap(R.id.baseCurrencyImageView, result)
+//                appWidgetManager.updateAppWidget(appWidgetId, views)
+//            }
+//        }
+//    }
+//
+//    private class ImageDownloaderTarget(
+//        private val context: Context,
+//        private val appWidgetManager: AppWidgetManager,
+//        private val appWidgetId: Int
+//    ) : AsyncTask<String, Void, Bitmap?>() {
+//
+//        override fun doInBackground(vararg urls: String?): Bitmap? {
+//            return try {
+//                val url = URL(urls[0])
+//                val connection = url.openConnection() as HttpURLConnection
+//                connection.doInput = true
+//                connection.connect()
+//                val input = connection.inputStream
+//                BitmapFactory.decodeStream(input)
+//            } catch (e: Exception) {
+//                null
+//            }
+//        }
+//
+//        override fun onPostExecute(result: Bitmap?) {
+//            if (result != null) {
+//                val views = RemoteViews(context.packageName, R.layout.exchange_rate_widget)
+//                views.setImageViewBitmap(R.id.targetCurrencyImageView, result)
+//                appWidgetManager.updateAppWidget(appWidgetId, views)
+//            }
+//        }
+//    }
+
+
+
+
+    private class ImageDownloader(
+        private val context: Context,
+        private val appWidgetManager: AppWidgetManager,
+        private val appWidgetId: Int
+    ) : AsyncTask<String, Void, List<Bitmap?>>() {
+
+        override fun doInBackground(vararg urls: String?): List<Bitmap?> {
+            return urls.map { url ->
+                try {
+                    val connection = URL(url).openConnection() as HttpURLConnection
+                    connection.doInput = true
+                    connection.connect()
+                    val input = connection.inputStream
+                    BitmapFactory.decodeStream(input)
+                } catch (e: Exception) {
+                    null
+                }
+            }
+        }
+
+        override fun onPostExecute(result: List<Bitmap?>) {
+            val views = RemoteViews(context.packageName, R.layout.exchange_rate_widget)
+
+            result[0]?.let { views.setImageViewBitmap(R.id.baseCurrencyImageView, it) }
+            result[1]?.let { views.setImageViewBitmap(R.id.targetCurrencyImageView, it) }
+
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+        }
     }
 }
 

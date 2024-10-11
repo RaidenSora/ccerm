@@ -49,9 +49,9 @@
 
             <ImageView
                 android:id="@+id/baseCurrencyImageView"
-                android:layout_width="25sp"
-                android:layout_height="17sp"
-                android:layout_marginRight="5sp"
+                android:layout_width="20sp"
+                android:layout_height="14sp"
+                android:layout_marginRight="2sp"
                 />
 
             <TextView
@@ -102,9 +102,9 @@
 
                     <ImageView
                         android:id="@+id/targetCurrencyImageView"
-                        android:layout_width="25sp"
-                        android:layout_height="17sp"
-                        android:layout_marginRight="5sp"
+                        android:layout_width="20sp"
+                        android:layout_height="14sp"
+                        android:layout_marginRight="2sp"
                         />
 
                     <TextView
@@ -144,8 +144,10 @@
                 android:textSize="22sp"
                 tools:text="PHP 56.0"
                 android:ellipsize="end"
-                android:padding="15sp"
-
+                android:paddingLeft="15sp"
+                android:paddingRight="15sp"
+                android:paddingTop="15sp"
+                android:paddingBottom="20sp"
 
                 />
 
