@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 
 //import for test data
+import 'package:currency/settings.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 //import dependencies at classes na kelangan ng app, like yung workmanager para sa background process etc.
@@ -265,7 +266,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         const Spacer(),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Settings()),
+                            );
+                          },
                           icon: const Icon(
                             Icons.settings,
                             weight: 10,

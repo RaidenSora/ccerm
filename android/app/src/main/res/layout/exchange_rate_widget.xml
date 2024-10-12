@@ -105,6 +105,7 @@
                         android:layout_width="20sp"
                         android:layout_height="14sp"
                         android:layout_marginRight="2sp"
+                        android:layout_marginLeft="10sp"
                         />
 
                     <TextView
