@@ -65,6 +65,7 @@ flutter:
     - assets/test_data.json
     - assets/settings.png
     - assets/widget_settings.png
+    - assets/about.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
