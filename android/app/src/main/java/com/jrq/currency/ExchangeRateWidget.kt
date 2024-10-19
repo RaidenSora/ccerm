@@ -33,10 +33,22 @@ class ExchangeRateWidget : AppWidgetProvider() {
         for (appWidgetId in appWidgetIds) {
             val widgetData = HomeWidgetPlugin.getData(context)
             val views = RemoteViews(context.packageName, R.layout.exchange_rate_widget)
-            val textval = widgetData.getString("text","Text")
-            //views.setTextViewText(R.id.appwidget_text, textval)
+            val exchangeFrom = widgetData.getString("exchange_from","Text")
+            val exchangeTo = widgetData.getString("exchange_to","Text")
+            val exchangeFromFlag = widgetData.getString("exchange_from_flag","Text")
+            val exchangeToFlag = widgetData.getString("exchange_to_flag","Text")
+            val exchangeFromCountry = widgetData.getString("exchange_from_country","Text")
+            val exchangeToCountry = widgetData.getString("exchange_to_country","Text")
+            val exchangeFromRate = widgetData.getString("exchange_from_rate","Text")
+            val exchangeToRate = widgetData.getString("exchange_to_rate","Text")
+
+            views.setTextViewText(R.id.baseCurrencyCode, exchangeFrom)
+            views.setTextViewText(R.id.baseCurrencyName, exchangeFromCountry)
+            views.setTextViewText(R.id.targetCurrencyCode, exchangeTo)
+            views.setTextViewText(R.id.targetCurrencyName, exchangeToCountry)
+            views.setTextViewText(R.id.targetCurrencyValue, exchangeToRate)
             appWidgetManager.updateAppWidget(appWidgetId,views)
-            ImageDownloader(context, appWidgetManager, appWidgetId).execute("https://flagsapi.com/US/flat/64.png","https://flagsapi.com/PH/flat/64.png")
+            ImageDownloader(context, appWidgetManager, appWidgetId).execute("https://flagsapi.com/"+ exchangeFromFlag +"/flat/64.png","https://flagsapi.com/"+ exchangeToFlag +"/flat/64.png")
         }
     }
 

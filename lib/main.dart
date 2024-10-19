@@ -17,11 +17,15 @@ import 'package:country_flags/country_flags.dart';
 import 'package:intl/intl.dart';
 import 'package:currency/currencies/currencies.dart';
 import 'package:string_validator/string_validator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+late Future<ExchangeRates> futureExchangeRates;
 
 //function code ng background task
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) {
-    print("Native called background task: $task");
+    futureExchangeRates = fetchExchangeRates();
+    updateAndroidWidget();
     return Future.value(true);
   });
 }
@@ -66,7 +70,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   //defining variables and initial values na ididisplay ng application
-  late Future<ExchangeRates> futureExchangeRates;
+
   Timer? _debouncer;
   String? selectedValue1 = "USD";
   String? selectedValue2 = "PHP";
@@ -126,6 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
     amountTextField2.text = "${getCurrency(selectedValue2!)} 0.00";
     futureExchangeRates = fetchExchangeRates();
     initializeExchangeRates();
+    updateAndroidWidget();
   }
 
   @override
@@ -741,32 +746,64 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
 
-  //function para ma-fetch yung data mula sa API
-  Future<ExchangeRates> fetchExchangeRates() async {
-    //loading test data
-    String jsonString = await rootBundle.loadString('assets/test_data.json');
-    return ExchangeRates.fromJson(
-        jsonDecode(jsonString) as Map<String, dynamic>);
+//function para ma-fetch yung data mula sa API
+Future<ExchangeRates> fetchExchangeRates() async {
+  //loading test data
+  String jsonString = await rootBundle.loadString('assets/test_data.json');
+  return ExchangeRates.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
 
-    // final response = await http.get(Uri.parse(
-    //     'https://api.currencyapi.com/v3/latest?apikey=${Env.apiKey}'));
+  // final response = await http.get(Uri.parse(
+  //     'https://api.currencyapi.com/v3/latest?apikey=${Env.apiKey}'));
 
-    // if (response.statusCode == 200) {
-    //   return ExchangeRates.fromJson(
-    //       jsonDecode(response.body) as Map<String, dynamic>);
-    // } else {
-    //   throw Exception('Failed to load convertions');
-    // }
-  }
+  // if (response.statusCode == 200) {
+  //   return ExchangeRates.fromJson(
+  //       jsonDecode(response.body) as Map<String, dynamic>);
+  // } else {
+  //   throw Exception('Failed to load convertions');
+  // }
 }
 
 //function para ma-update yung value sa homepage widget
-void updateAndroidWidget(String count) {
-  HomeWidget.saveWidgetData("text", count);
-  HomeWidget.updateWidget(
-    androidName: "ExchangeRateWidget",
-  );
+void updateAndroidWidget() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final String? exchangeFrom = prefs.getString('exhange_from');
+  final String? exchangeTo = prefs.getString('exchange_to');
+  final String? exchangeFromFlag = prefs.getString('exchange_from_flag');
+  final String? exchangeToFlag = prefs.getString('exchange_to_flag');
+  final String? exchangeFromCountry = prefs.getString('exchange_from_country');
+  final String? exchangeToCountry = prefs.getString('exchange_to_country');
+
+  futureExchangeRates.then((onValue) {
+    if (exchangeFrom == null) {
+      HomeWidget.saveWidgetData("exchange_from", "USD");
+      HomeWidget.saveWidgetData("exchange_to", "PHP");
+      HomeWidget.saveWidgetData("exchange_from_flag", "US");
+      HomeWidget.saveWidgetData("exchange_to_flag", "PH");
+      HomeWidget.saveWidgetData("exchange_from_country", "USD - US Dollar");
+      HomeWidget.saveWidgetData("exchange_to_country", "PHP - Philippine Peso");
+      HomeWidget.saveWidgetData(
+          "exchange_from_rate", onValue.data["USD"]?.value.toStringAsFixed(2));
+      HomeWidget.saveWidgetData(
+          "exchange_to_rate", onValue.data["PHP"]?.value.toStringAsFixed(2));
+    } else {
+      HomeWidget.saveWidgetData("exchange_from", exchangeFrom);
+      HomeWidget.saveWidgetData("exchange_to", exchangeTo);
+      HomeWidget.saveWidgetData("exchange_from_flag", exchangeFromFlag);
+      HomeWidget.saveWidgetData("exchange_to_flag", exchangeToFlag);
+      HomeWidget.saveWidgetData("exchange_from_country", exchangeFromCountry);
+      HomeWidget.saveWidgetData("exchange_to_country", exchangeToCountry);
+      HomeWidget.saveWidgetData("exchange_from_rate",
+          onValue.data[exchangeFrom]?.value.toStringAsFixed(2));
+      HomeWidget.saveWidgetData("exchange_to_rate",
+          onValue.data[exchangeTo]?.value.toStringAsFixed(2));
+    }
+
+    HomeWidget.updateWidget(
+      androidName: "ExchangeRateWidget",
+    );
+  });
 }
 
 //function para makuha yung currency symbol ng currency code
