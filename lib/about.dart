@@ -29,7 +29,7 @@ class _AboutState extends State<About> {
             child: Column(
               children: [
                 Container(
-                  margin: const EdgeInsets.only(top: 20),
+                  margin: const EdgeInsets.fromLTRB(0, 30, 0, 30),
                   padding: const EdgeInsets.all(10),
                   child: Row(
                     children: [
@@ -47,10 +47,20 @@ class _AboutState extends State<About> {
                           fontSize: 25,
                           fontWeight: FontWeight.w600,
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Text(
+                    "Welcome to CCERM( Currency Converter and Exchange Rates Monitor) application! We are dedicated to providing users with accurate, real-time currency conversion and exchange rate information. Our goal is to empower travelers, businesses, OFWs, and anyone dealing with international transactions by simplifying the process of currency exchange. With a user-friendly interface and reliable data sourced from trusted financial institutions, we aim to help you make informed decisions and stay updated in a fast-paced global economy. Thank you for choosing us as your go-to resource for currency exchange needs.",
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                )
               ],
             ),
           ),

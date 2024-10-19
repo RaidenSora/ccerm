@@ -1,3 +1,5 @@
+import 'package:currency/about.dart';
+import 'package:currency/widget_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -29,7 +31,7 @@ class _SettingsState extends State<Settings> {
             child: Column(
               children: [
                 Container(
-                  margin: const EdgeInsets.only(top: 20),
+                  margin: const EdgeInsets.fromLTRB(0, 30, 0, 30),
                   padding: const EdgeInsets.all(10),
                   child: Row(
                     children: [
@@ -54,7 +56,13 @@ class _SettingsState extends State<Settings> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const WidgetSettings()),
+                      );
+                    },
                     child: Row(
                       children: [
                         const Icon(
@@ -79,7 +87,12 @@ class _SettingsState extends State<Settings> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const About()),
+                      );
+                    },
                     child: Row(
                       children: [
                         const Icon(
