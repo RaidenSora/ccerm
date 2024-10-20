@@ -737,18 +737,19 @@ class _MyHomePageState extends State<MyHomePage> {
 //function para ma-fetch yung data mula sa API
 Future<ExchangeRates> fetchExchangeRates() async {
   //loading test data
-  String jsonString = await rootBundle.loadString('assets/test_data.json');
-  return ExchangeRates.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
+  // String jsonString = await rootBundle.loadString('assets/test_data.json');
+  // return ExchangeRates.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
 
-  // final response = await http.get(Uri.parse(
-  //     'https://api.currencyapi.com/v3/latest?apikey=${Env.apiKey}'));
+  final response = await http.get(
+      Uri.parse('https://api.currencyapi.com/v3/latest?apikey=${Env.apiKey}'));
 
-  // if (response.statusCode == 200) {
-  //   return ExchangeRates.fromJson(
-  //       jsonDecode(response.body) as Map<String, dynamic>);
-  // } else {
-  //   throw Exception('Failed to load convertions');
-  // }
+  if (response.statusCode == 200) {
+    return ExchangeRates.fromJson(
+        jsonDecode(response.body) as Map<String, dynamic>);
+  } else {
+    print(response.statusCode);
+    throw Exception('Failed to load convertions');
+  }
 }
 
 //function para ma-update yung value sa homepage widget

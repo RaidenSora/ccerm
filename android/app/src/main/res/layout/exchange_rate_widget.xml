@@ -80,7 +80,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100sp"
             android:layout_centerInParent="true"
             android:orientation="vertical"
             android:background="@drawable/layout_bg"
@@ -137,19 +137,20 @@
             <TextView
                 android:id="@+id/targetCurrencyValue"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:fontFamily="@font/poppins"
                 android:includeFontPadding="false"
-                android:text="PHP 56.0"
+                android:text="PHP 0"
                 android:textColor="#000000"
                 android:textSize="22sp"
-                tools:text="PHP 56.0"
+                tools:text="PHP 0"
                 android:ellipsize="end"
                 android:paddingLeft="15sp"
                 android:paddingRight="15sp"
-                android:paddingTop="15sp"
-                android:paddingBottom="20sp"
-
+                android:paddingTop="0sp"
+                android:paddingBottom="0sp"
+                android:gravity="center_vertical"
+                
                 />
 
         </LinearLayout>
