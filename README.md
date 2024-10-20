@@ -7,7 +7,7 @@
 
 <div align="center">
 
-<a href="https://github.com/RaidenSora"><img src="https://img.shields.io/badge/progress-70%25-green.svg" alt="RaidenSora" /></a>
+<a href="https://github.com/RaidenSora"><img src="https://img.shields.io/badge/progress-95%25-green.svg" alt="RaidenSora" /></a>
 <a href="https://github.com/RaidenSora/ccerm/commits/main/"><img src="https://img.shields.io/github/commit-activity/t/RaidenSora/ccerm" alt="Commits"></a>
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
 </div>
@@ -23,7 +23,8 @@ Welcome to CCERM( Currency Converter and Exchange Rates Monitor) application! We
 
 ## 📦 Releases 
 
-Coming soon 👀
+First release is [here](https://github.com/RaidenSora/ccerm/releases/tag/release-v1) 👀
+See latest releases [HERE](https://github.com/RaidenSora/ccerm/releases)
 
 ## 📎 CIY (Compile-It-Yourself)
 
