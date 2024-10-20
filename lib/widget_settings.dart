@@ -355,11 +355,9 @@ class _WidgetSettingsState extends State<WidgetSettings> {
       double? haveRate = onValue.data[exchangeFrom]?.value;
       //exchange rate value ng currency na gusto mong i-convert
       double? wantRate = onValue.data[exchangeTo]?.value;
-      double haveAmount, wantAmount;
-      //computation ng value from user divided by exchange rate ng currency na meron ka
-      haveAmount = 1 / haveRate!;
+      double wantAmount;
       //computation ng value ng currency na gusto mong i-convert
-      wantAmount = haveAmount * wantRate!;
+      wantAmount = haveRate! * wantRate!;
       HomeWidget.saveWidgetData("widget_exchange_from_rate",
           "${getCurrency(exchangeFrom)} ${onValue.data[exchangeFrom]?.value.toStringAsFixed(2)}");
       HomeWidget.saveWidgetData("widget_exchange_to_rate",
