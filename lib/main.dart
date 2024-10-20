@@ -612,20 +612,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
                                   ),
                                 ),
-                                // Flexible(
-                                //   child: Container(
-                                //     margin: const EdgeInsets.only(left: 10),
-                                //     child: Text(
-                                //       currencyNames[
-                                //           currencyCodes.indexOf(item)],
-                                //       overflow: TextOverflow.ellipsis,
-                                //       style: GoogleFonts.poppins(
-                                //         color: const Color(0xff636363),
-                                //         fontSize: 17,
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ),
                                 const Spacer(),
                                 Text(
                                   exchangeRatesValues.isNotEmpty == true
@@ -768,7 +754,7 @@ Future<ExchangeRates> fetchExchangeRates() async {
 //function para ma-update yung value sa homepage widget
 void updateAndroidWidget() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? exchangeFrom = prefs.getString('exhange_from');
+  final String? exchangeFrom = prefs.getString('exchange_from');
   final String? exchangeTo = prefs.getString('exchange_to');
   final String? exchangeFromFlag = prefs.getString('exchange_from_flag');
   final String? exchangeToFlag = prefs.getString('exchange_to_flag');
@@ -776,28 +762,52 @@ void updateAndroidWidget() async {
   final String? exchangeToCountry = prefs.getString('exchange_to_country');
 
   futureExchangeRates.then((onValue) {
-    if (exchangeFrom == null) {
-      HomeWidget.saveWidgetData("exchange_from", "USD");
-      HomeWidget.saveWidgetData("exchange_to", "PHP");
-      HomeWidget.saveWidgetData("exchange_from_flag", "US");
-      HomeWidget.saveWidgetData("exchange_to_flag", "PH");
-      HomeWidget.saveWidgetData("exchange_from_country", "USD - US Dollar");
-      HomeWidget.saveWidgetData("exchange_to_country", "PHP - Philippine Peso");
+    if (exchangeFrom == null ||
+        exchangeTo == null ||
+        exchangeFromFlag == null ||
+        exchangeToFlag == null ||
+        exchangeFromCountry == null ||
+        exchangeToCountry == null) {
+      HomeWidget.saveWidgetData("widget_exchange_from", "USD");
+      HomeWidget.saveWidgetData("widget_exchange_to", "PHP");
+      HomeWidget.saveWidgetData("widget_exchange_from_flag", "US");
+      HomeWidget.saveWidgetData("widget_exchange_to_flag", "PH");
+      HomeWidget.saveWidgetData("widget_exchange_from_country", "US Dollar");
       HomeWidget.saveWidgetData(
-          "exchange_from_rate", onValue.data["USD"]?.value.toStringAsFixed(2));
+          "widget_exchange_to_country", "Philippine Peso");
+      double? haveRate = onValue.data[exchangeFrom]?.value;
+      //exchange rate value ng currency na gusto mong i-convert
+      double? wantRate = onValue.data[exchangeTo]?.value;
+      double haveAmount, wantAmount;
+      //computation ng value from user divided by exchange rate ng currency na meron ka
+      haveAmount = 1 / haveRate!;
+      //computation ng value ng currency na gusto mong i-convert
+      wantAmount = haveAmount * wantRate!;
+      HomeWidget.saveWidgetData("widget_exchange_from_rate",
+          "USD ${onValue.data["USD"]?.value.toStringAsFixed(2)}");
       HomeWidget.saveWidgetData(
-          "exchange_to_rate", onValue.data["PHP"]?.value.toStringAsFixed(2));
+          "widget_exchange_to_rate", "PHP ${wantAmount.toStringAsFixed(2)}");
     } else {
-      HomeWidget.saveWidgetData("exchange_from", exchangeFrom);
-      HomeWidget.saveWidgetData("exchange_to", exchangeTo);
-      HomeWidget.saveWidgetData("exchange_from_flag", exchangeFromFlag);
-      HomeWidget.saveWidgetData("exchange_to_flag", exchangeToFlag);
-      HomeWidget.saveWidgetData("exchange_from_country", exchangeFromCountry);
-      HomeWidget.saveWidgetData("exchange_to_country", exchangeToCountry);
-      HomeWidget.saveWidgetData("exchange_from_rate",
-          onValue.data[exchangeFrom]?.value.toStringAsFixed(2));
-      HomeWidget.saveWidgetData("exchange_to_rate",
-          onValue.data[exchangeTo]?.value.toStringAsFixed(2));
+      HomeWidget.saveWidgetData("widget_exchange_from", exchangeFrom);
+      HomeWidget.saveWidgetData("widget_exchange_to", exchangeTo);
+      HomeWidget.saveWidgetData("widget_exchange_from_flag", exchangeFromFlag);
+      HomeWidget.saveWidgetData("widget_exchange_to_flag", exchangeToFlag);
+      HomeWidget.saveWidgetData(
+          "widget_exchange_from_country", exchangeFromCountry);
+      HomeWidget.saveWidgetData(
+          "widget_exchange_to_country", exchangeToCountry);
+      double? haveRate = onValue.data[exchangeFrom]?.value;
+      //exchange rate value ng currency na gusto mong i-convert
+      double? wantRate = onValue.data[exchangeTo]?.value;
+      double haveAmount, wantAmount;
+      //computation ng value from user divided by exchange rate ng currency na meron ka
+      haveAmount = 1 / haveRate!;
+      //computation ng value ng currency na gusto mong i-convert
+      wantAmount = haveAmount * wantRate!;
+      HomeWidget.saveWidgetData("widget_exchange_from_rate",
+          "${getCurrency(exchangeFrom)} ${onValue.data[exchangeFrom]?.value.toStringAsFixed(2)}");
+      HomeWidget.saveWidgetData("widget_exchange_to_rate",
+          "${getCurrency(exchangeTo)} ${wantAmount.toStringAsFixed(2)}");
     }
 
     HomeWidget.updateWidget(

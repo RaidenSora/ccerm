@@ -4,6 +4,7 @@ import 'dart:async';
 //import for test data
 import 'package:flutter/services.dart' show rootBundle;
 
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:currency/currencies/currencies.dart';
@@ -79,15 +80,14 @@ class _WidgetSettingsState extends State<WidgetSettings> {
       String exchangeToFlag = countryCodes[int.parse(to)];
       String exchangeFromCountry = currencyNames[int.parse(from)];
       String exchangeToCountry = currencyNames[int.parse(to)];
-      await prefs.setString('exhange_from_index', from);
-      await prefs.setString('exhange_to_index', to);
-      await prefs.setString('exhange_from', currencyCodes[int.parse(from)]);
-      await prefs.setString('exhange_to', currencyCodes[int.parse(to)]);
-      await prefs.setString('exhange_from_flag', countryCodes[int.parse(from)]);
-      await prefs.setString('exhange_to_flag', countryCodes[int.parse(to)]);
-      await prefs.setString(
-          'exhange_from_country', currencyNames[int.parse(from)]);
-      await prefs.setString('exhange_to_country', currencyNames[int.parse(to)]);
+      await prefs.setString('exchange_from_index', from);
+      await prefs.setString('exchange_to_index', to);
+      await prefs.setString('exchange_from', exchangeFrom);
+      await prefs.setString('exchange_to', exchangeTo);
+      await prefs.setString('exchange_from_flag', exchangeFromFlag);
+      await prefs.setString('exchange_to_flag', exchangeToFlag);
+      await prefs.setString('exchange_from_country', exchangeFromCountry);
+      await prefs.setString('exchange_to_country', exchangeToCountry);
 
       updateAndroidWidget(exchangeFrom, exchangeTo, exchangeFromFlag,
           exchangeToFlag, exchangeFromCountry, exchangeToCountry);
@@ -101,6 +101,7 @@ class _WidgetSettingsState extends State<WidgetSettings> {
           textColor: Colors.white,
           fontSize: 16.0);
     } catch (e) {
+      print("ERROR: $e");
       Fluttertoast.showToast(
           msg: "Saving failed.",
           toastLength: Toast.LENGTH_SHORT,
@@ -119,19 +120,19 @@ class _WidgetSettingsState extends State<WidgetSettings> {
 
   void initializeWidgetSettings() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? exchangeFrom = prefs.getString('exhange_from');
+    final String? exchangeFrom = prefs.getString('exchange_from');
     if (exchangeFrom == null) {
-      await prefs.setString('exhange_from', "USD");
-      await prefs.setString('exhange_to', "PHP");
-      await prefs.setString('exhange_from_flag', "US");
-      await prefs.setString('exhange_to_flag', "PH");
-      await prefs.setString('exhange_from_country', "USD - US Dollar");
-      await prefs.setString('exhange_to_country', "PHP - Philippine Peso");
-      await prefs.setString('exhange_from_index', "148");
-      await prefs.setString('exhange_from_index', "114");
+      await prefs.setString('exchange_from', "USD");
+      await prefs.setString('exchange_to', "PHP");
+      await prefs.setString('exchange_from_flag', "US");
+      await prefs.setString('exchange_to_flag', "PH");
+      await prefs.setString('exchange_from_country', "USD - US Dollar");
+      await prefs.setString('exchange_to_country', "PHP - Philippine Peso");
+      await prefs.setString('exchange_from_index', "148");
+      await prefs.setString('exchange_from_index', "114");
     } else {
-      final String? exchangeFrom = prefs.getString('exhange_from_index');
-      final String? exchangeTo = prefs.getString('exhange_to_index');
+      final String? exchangeFrom = prefs.getString('exchange_from_index');
+      final String? exchangeTo = prefs.getString('exchange_to_index');
       setState(() {
         selectedValue1 = exchangeFrom;
         selectedValue2 = exchangeTo;
@@ -328,24 +329,52 @@ class _WidgetSettingsState extends State<WidgetSettings> {
     // }
   }
 
+//function para makuha yung currency symbol ng currency code
+  String getCurrency(String currencyCode) {
+    var format = NumberFormat.simpleCurrency(name: currencyCode);
+    return format.currencySymbol;
+  }
+
   void updateAndroidWidget(
       String exchangeFrom,
       String exchangeTo,
       String exchangeFromFlag,
       String exchangeToFlag,
       String exchangeFromCountry,
-      String exchangeToCountry) async {
+      String exchangeToCountry) {
     futureExchangeRates.then((onValue) {
-      HomeWidget.saveWidgetData("exchange_from", exchangeFrom);
-      HomeWidget.saveWidgetData("exchange_to", exchangeTo);
-      HomeWidget.saveWidgetData("exchange_from_flag", exchangeFromFlag);
-      HomeWidget.saveWidgetData("exchange_to_flag", exchangeToFlag);
-      HomeWidget.saveWidgetData("exchange_from_country", exchangeFromCountry);
-      HomeWidget.saveWidgetData("exchange_to_country", exchangeToCountry);
-      HomeWidget.saveWidgetData("exchange_from_rate",
-          onValue.data[exchangeFrom]?.value.toStringAsFixed(2));
-      HomeWidget.saveWidgetData("exchange_to_rate",
-          onValue.data[exchangeTo]?.value.toStringAsFixed(2));
+      HomeWidget.saveWidgetData("widget_exchange_from", exchangeFrom);
+      HomeWidget.saveWidgetData("widget_exchange_to", exchangeTo);
+      HomeWidget.saveWidgetData("widget_exchange_from_flag", exchangeFromFlag);
+      HomeWidget.saveWidgetData("widget_exchange_to_flag", exchangeToFlag);
+      HomeWidget.saveWidgetData(
+          "widget_exchange_from_country", exchangeFromCountry);
+      HomeWidget.saveWidgetData(
+          "widget_exchange_to_country", exchangeToCountry);
+
+      double? haveRate = onValue.data[exchangeFrom]?.value;
+      //exchange rate value ng currency na gusto mong i-convert
+      double? wantRate = onValue.data[exchangeTo]?.value;
+      double haveAmount, wantAmount;
+      //computation ng value from user divided by exchange rate ng currency na meron ka
+      haveAmount = 1 / haveRate!;
+      //computation ng value ng currency na gusto mong i-convert
+      wantAmount = haveAmount * wantRate!;
+      HomeWidget.saveWidgetData("widget_exchange_from_rate",
+          "${getCurrency(exchangeFrom)} ${onValue.data[exchangeFrom]?.value.toStringAsFixed(2)}");
+      HomeWidget.saveWidgetData("widget_exchange_to_rate",
+          "${getCurrency(exchangeTo)} ${wantAmount.toStringAsFixed(2)}");
+
+      print(exchangeFrom);
+      print(exchangeTo);
+      print(exchangeFromFlag);
+      print(exchangeToFlag);
+      print(exchangeFromCountry);
+      print(exchangeToCountry);
+      print(
+          "${getCurrency(exchangeFrom)} ${onValue.data[exchangeFrom]?.value.toStringAsFixed(2)}");
+      print(
+          "${getCurrency(exchangeTo)} ${onValue.data[exchangeTo]?.value.toStringAsFixed(2)}");
 
       HomeWidget.updateWidget(
         androidName: "ExchangeRateWidget",
