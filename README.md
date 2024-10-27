@@ -36,7 +36,7 @@ Run the following commands from your terminal:
 $ git clone https://github.com/RaidenSora/ccerm
 $ flutter pub get
 ```
-Create a free account on [Currency API](https://currencyapi.com/) and get your api key in dashboard.
+Create a free account on [Exchange Rates API](https://exchangeratesapi.io/) and get your api key in dashboard.
 <br>
 Add a `.env` file at the root of the project with this format.
 
