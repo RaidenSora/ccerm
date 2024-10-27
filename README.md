@@ -7,7 +7,7 @@
 
 <div align="center">
 
-<a href="https://github.com/RaidenSora"><img src="https://img.shields.io/badge/progress-95%25-green.svg" alt="RaidenSora" /></a>
+<a href="https://github.com/RaidenSora"><img src="https://img.shields.io/badge/progress-100%25-green.svg" alt="RaidenSora" /></a>
 <a href="https://github.com/RaidenSora/ccerm/commits/main/"><img src="https://img.shields.io/github/commit-activity/t/RaidenSora/ccerm" alt="Commits"></a>
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
 </div>
@@ -23,8 +23,9 @@ Welcome to CCERM( Currency Converter and Exchange Rates Monitor) application! We
 
 ## 📦 Releases 
 
-First release is [here](https://github.com/RaidenSora/ccerm/releases/tag/release-v1) 👀
-See latest releases [HERE](https://github.com/RaidenSora/ccerm/releases)
+First release is [here](https://github.com/RaidenSora/ccerm/releases/tag/release-v1) 🎉
+<br>
+See latest releases [HERE](https://github.com/RaidenSora/ccerm/releases) 👀
 
 ## 📎 CIY (Compile-It-Yourself)
 
@@ -36,12 +37,12 @@ Run the following commands from your terminal:
 $ git clone https://github.com/RaidenSora/ccerm
 $ flutter pub get
 ```
-Create a free account on [Currency API](https://currencyapi.com/) and get your api key in dashboard.
+Create a free account on [Exchange Rates API](https://exchangeratesapi.io/) and get your api key in dashboard.
 <br>
 Add a `.env` file at the root of the project with this format.
 
 ```.env
-API-KEY=CURRENCYAPI_API_KEY
+API-KEY=EXCHANGERATESAPI_API_KEY
 ```
 > IMPORTANT! Add both `.env` and `env.g.dart` files to your `.gitignore` file, otherwise, you might expose your environment variables.
 
