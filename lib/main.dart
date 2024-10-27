@@ -784,12 +784,18 @@ void updateAndroidWidget() async {
       HomeWidget.saveWidgetData(
           "widget_exchange_to_country", "Philippine Peso");
 
-      double haveRate = onValue.rates["USD"]!;
+      //value from user
+      double? amount = 1;
+      //exchange rate value ng currency na meron ka
+      double? haveRate = onValue.rates["USD"]!;
       //exchange rate value ng currency na gusto mong i-convert
-      double wantRate = onValue.rates["PHP"]!;
-      double wantAmount;
+      double? wantRate = onValue.rates["PHP"]!;
+      double haveAmount, wantAmount;
+      //computation ng value from user divided by exchange rate ng currency na meron ka
+      haveAmount = amount / haveRate;
       //computation ng value ng currency na gusto mong i-convert
-      wantAmount = haveRate * wantRate;
+      wantAmount = haveAmount * wantRate;
+
       HomeWidget.saveWidgetData("widget_exchange_from_rate",
           "USD ${onValue.rates["USD"]?.toStringAsFixed(2)}");
       HomeWidget.saveWidgetData(

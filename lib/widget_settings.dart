@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:currency/currencies/currencies.dart';
-import 'package:country_flags/country_flags.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:home_widget/home_widget.dart';
@@ -22,7 +21,7 @@ class WidgetSettings extends StatefulWidget {
 
 class _WidgetSettingsState extends State<WidgetSettings> {
   late Future<ExchangeRates> futureExchangeRates;
-  String? selectedValue1 = "148";
+  String? selectedValue1 = "149";
   String? selectedValue2 = "114";
   bool isSaveButtonEnabled = true;
   String saveButtonString = "Save";
@@ -38,11 +37,15 @@ class _WidgetSettingsState extends State<WidgetSettings> {
       value: index.toString(),
       child: Row(
         children: [
-          CountryFlag.fromCountryCode(
-            countryCodes[index],
-            shape: const RoundedRectangle(3),
-            height: 23,
-            width: 35,
+          ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(3)),
+            child: SizedBox(
+              height: 23,
+              width: 34,
+              child: Image(
+                  image: AssetImage(
+                      'assets/flags/${currency.toLowerCase()}.static.png')),
+            ),
           ),
           Container(
             margin: const EdgeInsets.only(left: 10),
@@ -343,12 +346,17 @@ class _WidgetSettingsState extends State<WidgetSettings> {
       HomeWidget.saveWidgetData(
           "widget_exchange_to_country", exchangeToCountry);
 
+      double? amount = 1;
+      //exchange rate value ng currency na meron ka
       double? haveRate = onValue.rates[exchangeFrom];
       //exchange rate value ng currency na gusto mong i-convert
       double? wantRate = onValue.rates[exchangeTo];
-      double wantAmount;
+      double haveAmount, wantAmount;
+      //computation ng value from user divided by exchange rate ng currency na meron ka
+      haveAmount = amount / haveRate!;
       //computation ng value ng currency na gusto mong i-convert
-      wantAmount = haveRate! * wantRate!;
+      wantAmount = haveAmount * wantRate!;
+
       HomeWidget.saveWidgetData("widget_exchange_from_rate",
           "${getCurrency(exchangeFrom)} ${onValue.rates[exchangeFrom]?.toStringAsFixed(2)}");
       HomeWidget.saveWidgetData("widget_exchange_to_rate",
