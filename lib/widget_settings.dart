@@ -1,9 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
 
-//import for test data
-import 'package:flutter/services.dart' show rootBundle;
-
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -101,7 +98,6 @@ class _WidgetSettingsState extends State<WidgetSettings> {
           textColor: Colors.white,
           fontSize: 16.0);
     } catch (e) {
-      print("ERROR: $e");
       Fluttertoast.showToast(
           msg: "Saving failed.",
           toastLength: Toast.LENGTH_SHORT,
@@ -313,13 +309,8 @@ class _WidgetSettingsState extends State<WidgetSettings> {
 
   //function para ma-fetch yung data mula sa API
   Future<ExchangeRates> fetchExchangeRates() async {
-    //loading test data
-    // String jsonString = await rootBundle.loadString('assets/test_data.json');
-    // return ExchangeRates.fromJson(
-    //     jsonDecode(jsonString) as Map<String, dynamic>);
-
     final response = await http.get(Uri.parse(
-        'https://api.currencyapi.com/v3/latest?apikey=${Env.apiKey}'));
+        'https://api.exchangeratesapi.io/v1/latest?access_key=${Env.apiKey}'));
 
     if (response.statusCode == 200) {
       return ExchangeRates.fromJson(
@@ -352,28 +343,16 @@ class _WidgetSettingsState extends State<WidgetSettings> {
       HomeWidget.saveWidgetData(
           "widget_exchange_to_country", exchangeToCountry);
 
-      double? haveRate = onValue.data[exchangeFrom]?.value;
+      double? haveRate = onValue.rates[exchangeFrom];
       //exchange rate value ng currency na gusto mong i-convert
-      double? wantRate = onValue.data[exchangeTo]?.value;
+      double? wantRate = onValue.rates[exchangeTo];
       double wantAmount;
       //computation ng value ng currency na gusto mong i-convert
       wantAmount = haveRate! * wantRate!;
       HomeWidget.saveWidgetData("widget_exchange_from_rate",
-          "${getCurrency(exchangeFrom)} ${onValue.data[exchangeFrom]?.value.toStringAsFixed(2)}");
+          "${getCurrency(exchangeFrom)} ${onValue.rates[exchangeFrom]?.toStringAsFixed(2)}");
       HomeWidget.saveWidgetData("widget_exchange_to_rate",
           "${getCurrency(exchangeTo)} ${wantAmount.toStringAsFixed(2)}");
-
-      print(exchangeFrom);
-      print(exchangeTo);
-      print(exchangeFromFlag);
-      print(exchangeToFlag);
-      print(exchangeFromCountry);
-      print(exchangeToCountry);
-      print(
-          "${getCurrency(exchangeFrom)} ${onValue.data[exchangeFrom]?.value.toStringAsFixed(2)}");
-      print(
-          "${getCurrency(exchangeTo)} ${onValue.data[exchangeTo]?.value.toStringAsFixed(2)}");
-
       HomeWidget.updateWidget(
         androidName: "ExchangeRateWidget",
       );

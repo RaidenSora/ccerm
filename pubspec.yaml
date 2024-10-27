@@ -45,6 +45,7 @@ dependencies:
   shared_preferences: ^2.3.2
   fluttertoast: ^8.2.8
   flutter_launcher_icons: ^0.14.1
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +70,7 @@ flutter:
     - assets/settings.png
     - assets/widget_settings.png
     - assets/about.png
+    - assets/flags/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

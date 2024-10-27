@@ -1,44 +1,38 @@
-//Exchange rates class para magkaron ng structure yung data galing sa API
 class ExchangeRates {
-  final Meta meta;
-  final Map<String, Currency> data;
+  final bool success;
+  final int timestamp;
+  final String base;
+  final String date;
+  final Map<String, double> rates;
 
-  ExchangeRates({required this.meta, required this.data});
+  ExchangeRates({
+    required this.success,
+    required this.timestamp,
+    required this.base,
+    required this.date,
+    required this.rates,
+  });
 
   factory ExchangeRates.fromJson(Map<String, dynamic> json) {
     return ExchangeRates(
-      meta: Meta.fromJson(json['meta']),
-      data: (json['data'] as Map<String, dynamic>).map(
-        (key, value) => MapEntry(key, Currency.fromJson(value)),
+      success: json['success'],
+      timestamp: json['timestamp'],
+      base: json['base'],
+      date: json['date'],
+      rates: (json['rates'] as Map<String, dynamic>).map(
+        (key, value) =>
+            MapEntry(key, (value is int) ? value.toDouble() : value as double),
       ),
     );
   }
-}
 
-//Meta class para sa meta data galing sa api
-class Meta {
-  final String lastUpdatedAt;
-
-  Meta({required this.lastUpdatedAt});
-
-  factory Meta.fromJson(Map<String, dynamic> json) {
-    return Meta(
-      lastUpdatedAt: json['last_updated_at'],
-    );
-  }
-}
-
-//Currency class para sa currency data like value and code galing sa api
-class Currency {
-  final String code;
-  final double value;
-
-  Currency({required this.code, required this.value});
-
-  factory Currency.fromJson(Map<String, dynamic> json) {
-    return Currency(
-      code: json['code'],
-      value: double.parse(json['value'].toString()),
-    );
+  Map<String, dynamic> toJson() {
+    return {
+      'success': success,
+      'timestamp': timestamp,
+      'base': base,
+      'date': date,
+      'rates': rates,
+    };
   }
 }

@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 
-//import for test data
 import 'package:currency/settings.dart';
-import 'package:flutter/services.dart' show rootBundle;
 
 //import dependencies at classes na kelangan ng app, like yung workmanager para sa background process etc.
 import 'package:currency/classes/exchange_rates.dart';
@@ -13,7 +11,8 @@ import 'package:home_widget/home_widget.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
-import 'package:country_flags/country_flags.dart';
+
+//import 'package:country_flags/country_flags.dart';
 import 'package:intl/intl.dart';
 import 'package:currency/currencies/currencies.dart';
 import 'package:string_validator/string_validator.dart';
@@ -32,7 +31,7 @@ void callbackDispatcher() {
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
 
   //nag define tayo ng background process with duration of 15 minutes (background code will execute every 15 minutes)
   Workmanager().registerPeriodicTask(
@@ -74,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Timer? _debouncer;
   String? selectedValue1 = "USD";
   String? selectedValue2 = "PHP";
-  String? exchangeRatesBase = "USD";
+  String? exchangeRatesBase = "EUR";
   String? exchangeRateAddInitialValue = "AED";
   TextEditingController amountTextField1 = TextEditingController();
   TextEditingController amountTextField2 = TextEditingController();
@@ -92,11 +91,15 @@ class _MyHomePageState extends State<MyHomePage> {
       value: currency,
       child: Row(
         children: [
-          CountryFlag.fromCountryCode(
-            countryCodes[index],
-            shape: const RoundedRectangle(3),
-            height: 23,
-            width: 35,
+          ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(3)),
+            child: SizedBox(
+              height: 23,
+              width: 34,
+              child: Image(
+                  image: AssetImage(
+                      'assets/flags/${currency.toLowerCase()}.static.png')),
+            ),
           ),
           Container(
             margin: const EdgeInsets.only(left: 10),
@@ -145,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       if (isNumeric(value) || isFloat(value)) {
         input.clear();
-        input.text = "${getCurrency(selectedValue!)} $value";
+        input.text = "${getCurrency(selectedValue)} $value";
       }
     });
   }
@@ -179,9 +182,9 @@ class _MyHomePageState extends State<MyHomePage> {
           //value from user
           double? amount = double.parse(cleanedAmount);
           //exchange rate value ng currency na meron ka
-          double? haveRate = onValue.data[have]?.value;
+          double? haveRate = onValue.rates[have];
           //exchange rate value ng currency na gusto mong i-convert
-          double? wantRate = onValue.data[want]?.value;
+          double? wantRate = onValue.rates[want];
           double haveAmount, wantAmount;
           //computation ng value from user divided by exchange rate ng currency na meron ka
           haveAmount = amount / haveRate!;
@@ -213,8 +216,8 @@ class _MyHomePageState extends State<MyHomePage> {
     await futureExchangeRates.then((onValue) {
       exchangeRatesValues.clear();
       for (var value in exchangeRatesRecords) {
-        double? baseValue = onValue.data[exchangeRatesBase]?.value;
-        double? targetValue = onValue.data[value]?.value;
+        double? baseValue = onValue.rates[exchangeRatesBase];
+        double? targetValue = onValue.rates[value];
         double haveAmount = 1 / baseValue!;
         double? exchangeRateFinalValue = haveAmount * targetValue!;
 
@@ -562,12 +565,16 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             child: Row(
                               children: [
-                                CountryFlag.fromCountryCode(
-                                  countryCodes[currencyCodes
-                                      .indexOf(exchangeRatesBase!)],
-                                  shape: const RoundedRectangle(3),
-                                  height: 23,
-                                  width: 35,
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(3)),
+                                  child: SizedBox(
+                                    height: 23,
+                                    width: 34,
+                                    child: Image(
+                                        image: AssetImage(
+                                            'assets/flags/${exchangeRatesBase!.toLowerCase()}.static.png')),
+                                  ),
                                 ),
                                 Container(
                                   margin: const EdgeInsets.only(left: 15),
@@ -596,11 +603,16 @@ class _MyHomePageState extends State<MyHomePage> {
                             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                             child: Row(
                               children: [
-                                CountryFlag.fromCountryCode(
-                                  countryCodes[currencyCodes.indexOf(item)],
-                                  shape: const RoundedRectangle(3),
-                                  height: 23,
-                                  width: 35,
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(3)),
+                                  child: SizedBox(
+                                    height: 23,
+                                    width: 34,
+                                    child: Image(
+                                        image: AssetImage(
+                                            'assets/flags/${item.toLowerCase()}.static.png')),
+                                  ),
                                 ),
                                 Container(
                                   margin: const EdgeInsets.only(left: 15),
@@ -736,18 +748,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
 //function para ma-fetch yung data mula sa API
 Future<ExchangeRates> fetchExchangeRates() async {
-  //loading test data
-  // String jsonString = await rootBundle.loadString('assets/test_data.json');
-  // return ExchangeRates.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
-
-  final response = await http.get(
-      Uri.parse('https://api.currencyapi.com/v3/latest?apikey=${Env.apiKey}'));
+  final response = await http.get(Uri.parse(
+      'https://api.exchangeratesapi.io/v1/latest?access_key=${Env.apiKey}'));
 
   if (response.statusCode == 200) {
     return ExchangeRates.fromJson(
         jsonDecode(response.body) as Map<String, dynamic>);
   } else {
-    print(response.statusCode);
     throw Exception('Failed to load convertions');
   }
 }
@@ -777,14 +784,14 @@ void updateAndroidWidget() async {
       HomeWidget.saveWidgetData(
           "widget_exchange_to_country", "Philippine Peso");
 
-      double haveRate = onValue.data["USD"]!.value;
+      double haveRate = onValue.rates["USD"]!;
       //exchange rate value ng currency na gusto mong i-convert
-      double wantRate = onValue.data["PHP"]!.value;
+      double wantRate = onValue.rates["PHP"]!;
       double wantAmount;
       //computation ng value ng currency na gusto mong i-convert
       wantAmount = haveRate * wantRate;
       HomeWidget.saveWidgetData("widget_exchange_from_rate",
-          "USD ${onValue.data["USD"]?.value.toStringAsFixed(2)}");
+          "USD ${onValue.rates["USD"]?.toStringAsFixed(2)}");
       HomeWidget.saveWidgetData(
           "widget_exchange_to_rate", "PHP ${wantAmount.toStringAsFixed(2)}");
     } else {
@@ -796,14 +803,14 @@ void updateAndroidWidget() async {
           "widget_exchange_from_country", exchangeFromCountry);
       HomeWidget.saveWidgetData(
           "widget_exchange_to_country", exchangeToCountry);
-      double haveRate = onValue.data[exchangeFrom]!.value;
+      double haveRate = onValue.rates[exchangeFrom]!;
       //exchange rate value ng currency na gusto mong i-convert
-      double wantRate = onValue.data[exchangeTo]!.value;
+      double wantRate = onValue.rates[exchangeTo]!;
       double wantAmount;
       //computation ng value ng currency na gusto mong i-convert
       wantAmount = haveRate * wantRate;
       HomeWidget.saveWidgetData("widget_exchange_from_rate",
-          "${getCurrency(exchangeFrom)} ${onValue.data[exchangeFrom]?.value.toStringAsFixed(2)}");
+          "${getCurrency(exchangeFrom)} ${onValue.rates[exchangeFrom]?.toStringAsFixed(2)}");
       HomeWidget.saveWidgetData("widget_exchange_to_rate",
           "${getCurrency(exchangeTo)} ${wantAmount.toStringAsFixed(2)}");
     }
