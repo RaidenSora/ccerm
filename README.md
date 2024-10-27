@@ -23,8 +23,9 @@ Welcome to CCERM( Currency Converter and Exchange Rates Monitor) application! We
 
 ## 📦 Releases 
 
-First release is [here](https://github.com/RaidenSora/ccerm/releases/tag/release-v1) 👀
-See latest releases [HERE](https://github.com/RaidenSora/ccerm/releases)
+First release is [here](https://github.com/RaidenSora/ccerm/releases/tag/release-v1) 🎉
+<br>
+See latest releases [HERE](https://github.com/RaidenSora/ccerm/releases) 👀
 
 ## 📎 CIY (Compile-It-Yourself)
 
