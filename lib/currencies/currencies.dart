@@ -130,8 +130,8 @@ const List<String> currencyCodes = [
   "SEK",
   "SGD",
   "SHP",
-  "SLE"
-      "SLL",
+  "SLE",
+  "SLL",
   "SOS",
   "SRD",
   "STD",
